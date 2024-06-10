@@ -1,11 +1,9 @@
 export const navbarLinks = [
-  { title: "Home", href: "/" },
-  { title: "Shop", href: "/shop" },
-  { title: "Deals", href: "/deals" },
-  { title: "About", href: "/about" },
-  { title: "Contact", href: "/contact" },
-  { title: "Logout", href: "/logout" },
-  { title: "Cart(1)", href: "/cart" },
+  {id:1, title: "Home", href: "/" },
+  {id:2, title: "Shop", href: "/list?cat=all-products" },
+  {id:3, title: "Deals", href: "/deals" },
+  {id:4, title: "About", href: "/about" }
+
 ] as const;
 
 export const heroSlides = [

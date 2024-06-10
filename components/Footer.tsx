@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Logo from "./Logo";
 
 const Footer = () => {
   return (
@@ -8,9 +9,7 @@ const Footer = () => {
       <div className="flex flex-col justify-between gap-24 md:flex-row">
         {/* LEFT */}
         <div className="flex w-full flex-col gap-8 md:w-1/2 lg:w-1/4">
-          <Link href="/">
-            <div className="text-2xl tracking-wide">Under Armour</div>
-          </Link>
+          <Logo/>
           <p>Under Armour, Inc. 1020 Hull Street Baltimore, MD 21230-2080</p>
           <span className="font-semibold">under@underarmour.com</span>
           <span className="font-semibold">

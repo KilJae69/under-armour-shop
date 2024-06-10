@@ -7,7 +7,6 @@ import clsx from "clsx";
 
 export default function Slider() {
   const [current, setCurrent] = useState(0);
-  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -22,7 +21,6 @@ export default function Slider() {
         className="flex h-full w-max transition-all duration-1000 ease-in-out"
         style={{ transform: `translateX(-${current * 100}vw)` }}
       >
-        
         {heroSlides.map((slide) => (
           <div
             key={slide.id}
@@ -40,7 +38,7 @@ export default function Slider() {
                 {" "}
                 {slide.title}{" "}
               </h1>
-              <Link href={slide.url}>
+              <Link href={"/list"}>
                 <button className="rounded-md bg-black px-4 py-3 text-white">
                   SHOP NOW
                 </button>
@@ -52,7 +50,7 @@ export default function Slider() {
                 src={slide.img}
                 alt=""
                 fill
-                sizes="100%"
+                sizes="(max-width:1277px) 100vw, 50vw"
                 className="object-cover"
               />
             </div>

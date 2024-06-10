@@ -1,4 +1,3 @@
-import AddProduct from "@/components/AddProduct";
 import CustomizeProducts from "@/components/CustomizeProducts";
 import ProductImages from "@/components/ProductImages";
 import { wixClientServer } from "@/lib/wixClientServer";
@@ -10,9 +9,37 @@ type SinglePageProps = {
   };
 };
 
+export async function generateStaticParams() {
+  const wixClient = await wixClientServer();
+  const res = await wixClient.products.queryProducts().find();
+
+  const paths = res.items.map((product) => ({
+    slug: product.slug,
+  }));
+
+  return paths;
+}
+
+export async function generateMetadata({ params }: SinglePageProps) {
+  const wixClient = await wixClientServer();
+  const res = await wixClient.products
+    .queryProducts()
+    .eq("slug", params.slug)
+    .find();
+
+  if (!res.items || res.items.length === 0) return notFound();
+  // TODO ADD NOT FOUND PAGE
+  const product = res.items[0];
+
+  return {
+    title: product.name,
+    description: product.description,
+  };
+}
+
 export default async function SinglePage({ params }: SinglePageProps) {
   const { slug } = params;
-
+ 
   const wixClient = await wixClientServer();
   const res = await wixClient.products.queryProducts().eq("slug", slug).find();
 
@@ -21,7 +48,7 @@ export default async function SinglePage({ params }: SinglePageProps) {
   const product = res.items[0];
 
   return (
-    <div className="relative flex flex-col gap-16 px-4 md:px-8 lg:flex-row lg:px-16 xl:px-32 2xl:px-64">
+    <div className="relative mt-28 flex flex-col gap-16 px-4 md:px-8 lg:flex-row lg:px-16 xl:mt-44 xl:px-32 2xl:px-64">
       {/* Image*/}
       <div className="top-20 h-max w-full lg:sticky lg:w-1/2">
         <ProductImages images={product.media?.items || []} />
@@ -50,13 +77,7 @@ export default async function SinglePage({ params }: SinglePageProps) {
             variants={product.variants}
             productOptions={product.productOptions}
           />
-        ) : (
-          <AddProduct
-          productId={product._id!}
-          variantId="00000000-0000-0000-0000-000000000000"
-          stockNumber={product.stock?.quantity || 0}
-          />
-        )}
+        ) : null}
         <div className="h-[2px] bg-gray-100" />
         {product.additionalInfoSections?.map((section) => (
           <div className="text-sm" key={section.title}>

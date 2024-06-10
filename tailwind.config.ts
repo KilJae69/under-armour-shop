@@ -16,6 +16,9 @@ const config: Config = {
       colors: {
         primary: "#f35c7a",
       },
+      spacing:{
+        "nav-height": "var(--nav-height)",
+      }
     },
   },
   plugins: [],

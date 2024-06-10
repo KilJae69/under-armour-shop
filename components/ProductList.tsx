@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import DOMPurify from "isomorphic-dompurify";
 import Pagination from "./Pagination";
+
 const PRODUCT_PER_PAGE = 8;
 
 const ProductList = async ({
@@ -22,19 +23,12 @@ const ProductList = async ({
     .startsWith("name", searchParams?.name || "")
     .eq("collectionIds", categoryId)
 
-    .hasSome(
-      "productType",
-      searchParams?.type ? [searchParams.type] : ["physical", "digital"]
-    )
     .gt("priceData.price", searchParams?.min || 0)
     .lt("priceData.price", searchParams?.max || 999999)
     .limit(limit || PRODUCT_PER_PAGE);
-   
-  // .find();
 
   if (searchParams?.sort) {
     const [sortType, sortBy] = searchParams.sort.split(" ");
-
 
     if (sortType === "asc") {
       productQuery = productQuery.ascending(sortBy);
@@ -43,16 +37,21 @@ const ProductList = async ({
     }
   }
 
-  // Apply pagination
+  // PAGINATION
   if (searchParams?.page) {
     const page = parseInt(searchParams.page);
     productQuery = productQuery.skip(page * (limit || PRODUCT_PER_PAGE));
   }
 
   const res = await productQuery.find();
- 
+
+  if (!res.items || res.items.length === 0)
+    return (
+      <div>Unfortunately, we couldn&apos;t find item you are looking for.</div>
+    );
+
   return (
-    <div className="mt-12 flex flex-wrap justify-between gap-x-8 gap-y-16">
+    <div className="mt-12 flex flex-wrap gap-x-8 gap-y-16">
       {res?.items.map((product: products.Product) => (
         <Link
           href={"/" + product.slug}
@@ -64,17 +63,19 @@ const ProductList = async ({
               src={product.media?.mainMedia?.image?.url || "/product.png"}
               alt=""
               priority
+              quality={100}
               fill
-              sizes="25vw"
+              sizes="(max-width:635px) 100vw, (max-width:1023) 50vw, 25vw"
               className="ease absolute z-10 rounded-md object-cover transition-opacity duration-500 hover:opacity-0"
             />
             {product.media?.items && (
               <Image
                 src={product.media?.items[1]?.image?.url || "/product.png"}
-                alt=""
+                alt={product.name ?? ""}
                 priority
                 fill
-                sizes="25vw"
+                quality={100}
+                sizes="(max-width:635px) 100vw, (max-width:1023) 50vw, 25vw"
                 className="absolute rounded-md object-cover"
               />
             )}

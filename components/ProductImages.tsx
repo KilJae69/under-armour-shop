@@ -29,12 +29,12 @@ export default function ProductImages({ images }: ProductImagesProps) {
         <Image
           src={images[index].image?.url || ""}
           alt=""
-          sizes="50vw"
+          sizes="(max-width:1023) 100vw, 50vw"
           fill
           className="rounded-md object-cover"
         />
       </div>
-      <div className="mt-8 flex justify-between gap-4">
+      <div className="mt-8 flex flex-wrap justify-between gap-4">
         {images.map((image, index) => (
           <div
             key={image._id}
